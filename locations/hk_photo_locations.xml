@@ -1,0 +1,385 @@
+<locations>
+  <location>
+    <name>Central Elevated Walkway</name>
+    <lat>22.283</lat>
+    <lng>114.158</lng>
+    <day>1</day>
+    <desc>Graphic diagonals, reflections off buildings, top-down shots of trams &amp; pedestrians[cite: 18].</desc>
+    <transport>MTR: Central</transport>
+    <time>Morning</time>
+    <category>Architecture</category>
+    <category>Urban Views</category>
+    <category>Transport</category>
+    <photoTip>24 mm · f/8 · CPL filter [cite: 19]</photoTip>
+    <photoTip>Look for architectural patterns[cite: 19].</photoTip>
+  </location>
+  <location>
+    <name>Tram ride (Central to Wan Chai)</name>
+    <lat>22.28</lat>
+    <lng>114.165</lng>
+    <day>1</day>
+    <desc>Shooting through tram windows, capturing motion blur of street scenes passing by[cite: 20].</desc>
+    <transport>Ding Ding Tram</transport>
+    <time>Morning</time>
+    <time>Afternoon</time>
+    <time>Evening</time>
+    <category>Transport</category>
+    <category>Street Life</category>
+    <photoTip>~1/15 s · ISO-Auto (max 1600)[cite: 21].</photoTip>
+  </location>
+  <location>
+    <name>Wan Chai wet-markets &amp; tong lau</name>
+    <lat>22.277</lat>
+    <lng>114.173</lng>
+    <day>1</day>
+    <desc>Neon signs on butcher scales, peeling paint textures, layers of balconies &amp; hanging laundry[cite: 22].</desc>
+    <transport>MTR: Wan Chai / Tram</transport>
+    <time>Afternoon</time>
+    <category>Markets</category>
+    <category>Street Life</category>
+    <category>Architecture</category>
+    <photoTip>35 mm · f/2.8 · zone-focus[cite: 23].</photoTip>
+  </location>
+  <location>
+    <name>Blue House Cluster (Wan Chai)</name>
+    <lat>22.2728</lat>
+    <lng>114.1718</lng>
+    <day>1</day>
+    <desc>Capturing bus light-trails curving around the historic coloured building block[cite: 24].</desc>
+    <transport>MTR: Wan Chai</transport>
+    <time>Dusk</time>
+    <time>Evening</time>
+    <category>Architecture</category>
+    <category>Transport</category>
+    <category>Night</category>
+    <photoTip>Tripod · f/11 · ~10 s[cite: 25].</photoTip>
+  </location>
+  <location>
+    <name>Central Crossings (Light Trails)</name>
+    <lat>22.2815</lat>
+    <lng>114.1575</lng>
+    <day>1</day>
+    <desc>Long exposures of taxi/bus/tram light trails near major intersections[cite: 26]. Building lights often off ~10 PM[cite: 28].</desc>
+    <transport>MTR: Central</transport>
+    <time>Evening</time>
+    <time>Night</time>
+    <category>Transport</category>
+    <category>Urban Views</category>
+    <category>Night</category>
+    <photoTip>Tripod · f/11-f/16 · 5-20s · Low ISO [cite: 27]</photoTip>
+    <photoTip>Burst mode for multiple trails[cite: 28].</photoTip>
+  </location>
+  <location>
+    <name>Sham Shui Po markets (Apliu St / Pei Ho St)</name>
+    <lat>22.3299</lat>
+    <lng>114.1625</lng>
+    <day>2</day>
+    <desc>Close-ups of coin/hand exchanges, leading lines created by bolts of fabric, dense displays[cite: 29].</desc>
+    <transport>MTR: Sham Shui Po</transport>
+    <time>Morning</time>
+    <time>Afternoon</time>
+    <category>Markets</category>
+    <category>Street Life</category>
+    <photoTip>35 mm · f/4 · ~1/250 s[cite: 30].</photoTip>
+  </location>
+  <location>
+    <name>13 Streets, To Kwa Wan garages</name>
+    <lat>22.3215</lat>
+    <lng>114.1905</lng>
+    <day>2</day>
+    <desc>Mechanics working, colourful car parts, oily textures, industrial repetition[cite: 31].</desc>
+    <transport>Bus / Taxi from Mong Kok</transport>
+    <time>Afternoon</time>
+    <category>Street Life</category>
+    <category>Industrial</category>
+    <photoTip>50 mm · f/5.6 [cite: 32]</photoTip>
+    <photoTip>Ask permission first[cite: 32].</photoTip>
+  </location>
+  <location>
+    <name>Mong Kok neon circuit (Tong Choi St area)</name>
+    <lat>22.3185</lat>
+    <lng>114.1695</lng>
+    <day>2</day>
+    <desc>Neon reflections in puddles (esp. after rain), sneaker stalls, steam from food vendors[cite: 33].</desc>
+    <transport>MTR: Mong Kok</transport>
+    <time>Evening</time>
+    <time>Night</time>
+    <category>Street Life</category>
+    <category>Urban Views</category>
+    <category>Night</category>
+    <photoTip>24–35 mm · f/1.8 · ISO ~3200 [cite: 34]</photoTip>
+    <photoTip>Look for reflections [cite: 34]</photoTip>
+    <photoTip>Portrait orientation for compression[cite: 35].</photoTip>
+  </location>
+  <location>
+    <name>TST Promenade (Avenue of Stars area)</name>
+    <lat>22.2933</lat>
+    <lng>114.1722</lng>
+    <day>3</day>
+    <desc>Peach/golden light on the HK Island skyline (sunrise)[cite: 36], Symphony of Lights (night).</desc>
+    <transport>MTR: East Tsim Sha Tsui</transport>
+    <time>Morning</time>
+    <time>Evening</time>
+    <time>Night</time>
+    <category>Urban Views</category>
+    <category>Coastal</category>
+    <photoTip>Consider ND filters for long exposure water/clouds[cite: 37].</photoTip>
+  </location>
+  <location>
+    <name>Granville / Kimberley Streets (TST)</name>
+    <lat>22.2995</lat>
+    <lng>114.1738</lng>
+    <day>3</day>
+    <desc>Juxtapositions: reflections of luxury shops vs. street vendors, textures[cite: 38].</desc>
+    <transport>MTR: Tsim Sha Tsui</transport>
+    <time>Morning</time>
+    <time>Afternoon</time>
+    <time>Evening</time>
+    <category>Street Life</category>
+    <category>Architecture</category>
+    <photoTip>50 mm · f/3.5 [cite: 39]</photoTip>
+    <photoTip>Use telephoto for compression shots[cite: 39].</photoTip>
+  </location>
+  <location>
+    <name>Star Ferry (Upper Deck)</name>
+    <lat>22.2915</lat>
+    <lng>114.165</lng>
+    <day>3</day>
+    <desc>Freezing motion of gulls against the moving skyline backdrop (TST to Central)[cite: 40].</desc>
+    <transport>Star Ferry (TST or Central Pier)</transport>
+    <time>Morning</time>
+    <time>Afternoon</time>
+    <time>Evening</time>
+    <category>Transport</category>
+    <category>Urban Views</category>
+    <category>Coastal</category>
+    <photoTip>~1/500 s · 24 mm[cite: 41].</photoTip>
+  </location>
+  <location>
+    <name>Sheung Wan (Dried Seafood St / Man Mo Temple)</name>
+    <lat>22.2844</lat>
+    <lng>114.1504</lng>
+    <day>3</day>
+    <desc>Back-lighting through dried seafood, incense smoke, antique shops, murals[cite: 42].</desc>
+    <transport>MTR: Sheung Wan</transport>
+    <time>Afternoon</time>
+    <category>Markets</category>
+    <category>Culture</category>
+    <category>Street Life</category>
+    <category>Architecture</category>
+    <photoTip>35 mm · ISO ~3200 (inside temples)[cite: 43].</photoTip>
+  </location>
+  <location>
+    <name>Lugard Road Lookout (The Peak)</name>
+    <lat>22.2754</lat>
+    <lng>114.1446</lng>
+    <day>3</day>
+    <desc>Panoramic view of the city grid lighting up below[cite: 44].</desc>
+    <transport>Peak Tram / Bus 15 + walk</transport>
+    <time>Dusk</time>
+    <time>Evening</time>
+    <time>Night</time>
+    <category>Urban Views</category>
+    <category>Night</category>
+    <photoTip>Tripod · f/8 · ~15 s [cite: 45]</photoTip>
+    <photoTip>Consider shooting a time-lapse[cite: 46].</photoTip>
+  </location>
+  <location>
+    <name>Chun Yeung St Market, North Point</name>
+    <lat>22.2915</lat>
+    <lng>114.1936</lng>
+    <day>4</day>
+    <desc>Unique shot of the tram slicing through the bustling market stalls (watch out!)[cite: 47].</desc>
+    <transport>MTR: North Point / Tram</transport>
+    <time>Morning</time>
+    <category>Markets</category>
+    <category>Street Life</category>
+    <category>Transport</category>
+    <photoTip>24–35 mm · f/4 · ~1/500 s[cite: 48].</photoTip>
+  </location>
+  <location>
+    <name>Monster Building (Yick Cheong Bldg), Quarry Bay</name>
+    <lat>22.2841</lat>
+    <lng>114.2118</lng>
+    <day>4</day>
+    <desc>Dense, Blade Runner-esque architectural symmetry, pops of colour from laundry[cite: 49]. Look for blossom framing seasonally[cite: 50].</desc>
+    <transport>MTR: Quarry Bay / Tai Koo</transport>
+    <time>Afternoon</time>
+    <time>Morning</time>
+    <category>Architecture</category>
+    <category>Urban Views</category>
+    <photoTip>16–24 mm · f/8 [cite: 51]</photoTip>
+    <photoTip>Telephoto from outside for compression[cite: 51].</photoTip>
+    <photoTip>Be quick, respectful, no tripods[cite: 51].</photoTip>
+  </location>
+  <location>
+    <name>Quarry Bay Typhoon Shelter area</name>
+    <lat>22.2885</lat>
+    <lng>114.2155</lng>
+    <day>4</day>
+    <desc>Working junk boats, reflections of modern towers in the water[cite: 52].</desc>
+    <transport>MTR: Quarry Bay / Sai Wan Ho</transport>
+    <time>Afternoon</time>
+    <category>Coastal</category>
+    <category>Transport</category>
+    <category>Urban Views</category>
+    <photoTip>35 mm · f/5.6 · CPL filter[cite: 53].</photoTip>
+  </location>
+  <location>
+    <name>Sai Wan Ho Waterfront</name>
+    <lat>22.2848</lat>
+    <lng>114.2225</lng>
+    <day>4</day>
+    <desc>Silhouettes of joggers/walkers against the harbour, ferry light streaks[cite: 54].</desc>
+    <transport>MTR: Sai Wan Ho</transport>
+    <time>Evening</time>
+    <time>Night</time>
+    <category>Coastal</category>
+    <category>Street Life</category>
+    <category>Night</category>
+    <photoTip>Tripod · ND 8 filter · ~10–20 s[cite: 55].</photoTip>
+  </location>
+  <location>
+    <name>West Kowloon Cultural District Art Park</name>
+    <lat>22.3015</lat>
+    <lng>114.1595</lng>
+    <day>5</day>
+    <desc>Cyclists/joggers in golden morning mist (if lucky), giant M+ museum LED façade patterns[cite: 56].</desc>
+    <transport>MTR: Kowloon / Austin</transport>
+    <time>Morning</time>
+    <time>Afternoon</time>
+    <time>Evening</time>
+    <category>Urban Views</category>
+    <category>Architecture</category>
+    <category>Street Life</category>
+    <category>Coastal</category>
+    <photoTip>24–70 mm · f/8[cite: 57].</photoTip>
+  </location>
+  <location>
+    <name>Yau Ma Tei Fruit Market</name>
+    <lat>22.3117</lat>
+    <lng>114.1698</lng>
+    <day>5</day>
+    <desc>Fruit porters hauling crates, colourful shutters, textures of fruit piles[cite: 57].</desc>
+    <transport>MTR: Yau Ma Tei</transport>
+    <time>Morning</time>
+    <time>Afternoon</time>
+    <category>Markets</category>
+    <category>Street Life</category>
+    <photoTip>35 mm · f/2.8 · ISO ~800[cite: 58].</photoTip>
+  </location>
+  <location>
+    <name>Reclamation St / Jordan back-lanes</name>
+    <lat>22.3075</lat>
+    <lng>114.169</lng>
+    <day>5</day>
+    <desc>Dim sum chefs prepping near windows, curbside tailors/barbers, hidden shrines[cite: 59].</desc>
+    <transport>MTR: Jordan / Yau Ma Tei</transport>
+    <time>Afternoon</time>
+    <category>Street Life</category>
+    <category>Culture</category>
+    <photoTip>50 mm · f/3.5[cite: 60].</photoTip>
+  </location>
+  <location>
+    <name>Temple St Night Market, Jordan</name>
+    <lat>22.3084</lat>
+    <lng>114.1703</lng>
+    <day>5</day>
+    <desc>Fortune tellers, steam rising from food stalls, overhead canopy of lanterns/lights[cite: 60].</desc>
+    <transport>MTR: Jordan / Yau Ma Tei</transport>
+    <time>Evening</time>
+    <time>Night</time>
+    <category>Markets</category>
+    <category>Street Life</category>
+    <category>Culture</category>
+    <category>Night</category>
+    <photoTip>24–35 mm · f/1.8 · ISO ~3200 [cite: 61]</photoTip>
+    <photoTip>Look for puddle reflections[cite: 61].</photoTip>
+  </location>
+  <location>
+    <name>Kai Tak Runway Park</name>
+    <lat>22.3135</lat>
+    <lng>114.211</lng>
+    <day>5</day>
+    <desc>Long exposures capturing plane light trails (landing path nearby) over the harbour[cite: 62].</desc>
+    <transport>Bus / Taxi</transport>
+    <time>Night</time>
+    <category>Transport</category>
+    <category>Urban Views</category>
+    <category>Coastal</category>
+    <category>Night</category>
+    <photoTip>Tripod · ~20 s · f/11[cite: 63].</photoTip>
+  </location>
+  <location>
+    <name>Causeway Bay (Times Square area)</name>
+    <lat>22.2783</lat>
+    <lng>114.1823</lng>
+    <day>Extra</day>
+    <desc>Consumerism on steroids, LED canyon effect[cite: 64].</desc>
+    <transport>MTR: Causeway Bay</transport>
+    <time>Evening</time>
+    <time>Night</time>
+    <category>Urban Views</category>
+    <category>Street Life</category>
+    <category>Architecture</category>
+    <category>Night</category>
+    <photoTip>Shoot the Times Square façade from the streetcar island for scale[cite: 65].</photoTip>
+  </location>
+  <location>
+    <name>Sai Kung Public Pier</name>
+    <lat>22.3813</lat>
+    <lng>114.2733</lng>
+    <day>Extra</day>
+    <desc>Fishermen, seafood auction vibes, harbour town[cite: 66].</desc>
+    <transport>Bus / Minibus from Hang Hau/Choi Hung</transport>
+    <time>Morning</time>
+    <time>Afternoon</time>
+    <category>Coastal</category>
+    <category>Markets</category>
+    <category>Street Life</category>
+    <category>Culture</category>
+    <photoTip>Visit Sunday ~07:00 AM for the live seafood catch frenzy[cite: 67].</photoTip>
+  </location>
+  <location>
+    <name>Tai O Fishing Village, Lantau</name>
+    <lat>22.2544</lat>
+    <lng>113.8624</lng>
+    <day>Extra</day>
+    <desc>Stilt houses over water, salted fish racks[cite: 68].</desc>
+    <transport>Bus from Tung Chung MTR</transport>
+    <time>Morning</time>
+    <time>Afternoon</time>
+    <time>Dusk</time>
+    <category>Coastal</category>
+    <category>Culture</category>
+    <category>Architecture</category>
+    <category>Street Life</category>
+    <photoTip>Blue hour smoke from shrimp paste burners adds atmosphere[cite: 69].</photoTip>
+  </location>
+  <location>
+    <name>HKU Station Area Viewpoint (Approx.)</name>
+    <lat>22.2839</lat>
+    <lng>114.1358</lng>
+    <day>Extra</day>
+    <desc>Potential S-curve road for leading lines[cite: 70]. Requires scouting[cite: 71].</desc>
+    <transport>MTR: HKU</transport>
+    <time>Any</time>
+    <category>Urban Views</category>
+    <category>Transport</category>
+    <photoTip>Viewpoint near station exit; requires scouting[cite: 71].</photoTip>
+  </location>
+  <location>
+    <name>Harbour Grand Hong Kong Rooftop</name>
+    <lat>22.2874</lat>
+    <lng>114.1895</lng>
+    <day>Extra</day>
+    <desc>Epic high-angle harbour views[cite: 72].</desc>
+    <transport>MTR: Fortress Hill</transport>
+    <time>Evening</time>
+    <time>Night</time>
+    <time>Dusk</time>
+    <category>Urban Views</category>
+    <category>Night</category>
+    <photoTip>Likely requires hotel access (guest or rooftop bar). Check accessibility[cite: 73].</photoTip>
+  </location>
+</locations>
