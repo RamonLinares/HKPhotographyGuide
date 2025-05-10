@@ -3,12 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hong Kong Photography Locations (Playbook)</title>
-    
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-    crossorigin=""/>
-    
+    <title>Hong Kong Photography Guide</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <style>
         body {
             margin: 0;
@@ -20,1460 +16,565 @@
             height: 100vh;
         }
         #sidebar {
-            width: 350px; 
-            background: white;
+            width: 350px;
             padding: 20px;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            background: #f5f5f5;
             overflow-y: auto;
-            z-index: 1000;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
         }
         #map {
             flex-grow: 1;
-            height: 100vh;
-        }
-        .leaflet-popup-content {
-            font-size: 14px;
-            line-height: 1.4;
-            max-width: 300px; 
-            max-height: 300px; 
-            overflow-y: auto;
-        }
-        .filter-section {
-            margin-bottom: 20px;
-        }
-        .filter-section h3 {
-            margin: 0 0 10px 0;
-            padding-bottom: 5px;
-            border-bottom: 1px solid #eee;
-        }
-        .day-filter, .time-filter, .category-filter {
-            margin-bottom: 5px;
+            height: 100%;
         }
         .location-card {
-            padding: 10px;
-            margin: 5px 0;
-            border: 1px solid #eee;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.2s;
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .location-card:hover {
-            background-color: #f5f5f5;
-        }
-        .location-card h4 {
-            margin: 0 0 5px 0;
-            display: flex; /* Use flexbox for layout */
-            justify-content: space-between; /* Push day tag to the right */
-            align-items: center; /* Vertically align items */
-        }
-         .location-card h4 .day-tag {
-            font-size: 11px;
-            font-weight: normal;
-            background-color: #f0f0f0;
-            padding: 2px 6px;
-            border-radius: 10px;
-            color: #555;
-         }
         .tag {
             display: inline-block;
+            background: #e0e0e0;
             padding: 2px 8px;
+            border-radius: 12px;
             margin: 2px;
+            font-size: 12px;
+        }
+        .day-tag {
+            background: #4CAF50;
+            color: white;
+            padding: 2px 8px;
             border-radius: 12px;
             font-size: 12px;
-            background: #e0e0e0;
+        }
+        .photo-tips {
+            margin-top: 10px;
+            font-size: 14px;
         }
         .transport-info {
-            font-size: 12px;
-            color: #666;
-            margin-top: 5px;
+            margin: 5px 0;
+            font-size: 14px;
         }
         .google-maps-link {
             display: inline-block;
-            font-size: 12px;
-            color: #1a73e8;
+            margin-top: 10px;
+            color: #2196F3;
             text-decoration: none;
-            margin-top: 5px;
         }
         .google-maps-link:hover {
             text-decoration: underline;
         }
-        #search-box {
+        .location-photo {
             width: 100%;
-            padding: 8px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
+            height: 200px;
+            object-fit: cover;
             border-radius: 4px;
-            box-sizing: border-box; 
-        }
-        .filter-buttons {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 8px;
-        }
-        .filter-buttons button {
-            padding: 4px 8px;
-            font-size: 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            background: white;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .filter-buttons button:hover {
-            background: #f5f5f5;
-        }
-        .photo-tips {
-            margin-top: 8px;
-            font-size: 13px;
-            color: #444;
-            background: #f8f8f8;
-            padding: 8px;
-            border-radius: 4px;
-            border-left: 3px solid #1a73e8;
-        }
-        .photo-tips ul {
-            margin: 5px 0 5px 20px;
-            padding: 0;
-        }
-        .photo-tips li {
-            margin: 3px 0;
-            line-height: 1.4;
-        }
-
-        /* Initially hide the mobile toggle button */
-        #toggle-filters-btn {
-            display: none; 
-        }
-
-        /* --- Responsive Styles for Mobile --- */
-        @media (max-width: 768px) {
-            /* Hide sidebar by default, position it for overlay */
-            #sidebar {
-                position: fixed; /* Changed from fixed width */
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100vh; /* Take full viewport height */
-                max-height: 100vh; /* Override previous max-height */
-                background: white;
-                z-index: 1001; /* Above map and toggle button */
-                transform: translateY(100%); /* Start off-screen below */
-                transition: transform 0.3s ease-in-out;
-                overflow-y: auto; /* Allow scrolling within sidebar */
-                box-shadow: 0 -2px 10px rgba(0,0,0,0.2); /* Shadow for overlay */
-                padding: 20px; /* Keep padding */
-                box-sizing: border-box; /* Include padding in width/height */
-            }
-
-            /* Style for when sidebar is visible */
-            #sidebar.visible {
-                transform: translateY(0); /* Slide into view */
-            }
-
-            /* Make map take full screen */
-            #map {
-                height: 100vh;
-                width: 100%;
-                 z-index: 500; /* Ensure map is below sidebar */
-            }
-
-            /* Style and position the toggle button */
-            #toggle-filters-btn {
-                display: block; /* Show the button */
-                position: fixed;
-                bottom: 20px;
-                left: 50%;
-                transform: translateX(-50%);
-                z-index: 1002; /* INCREASE THIS z-index (was 1000) */
-                padding: 10px 20px;
-                font-size: 16px;
-                background-color: #1a73e8; /* Example color */
-                color: white;
-                border: none;
-                border-radius: 25px;
-                cursor: pointer;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            }
-
-             /* Ensure container doesn't use flex in mobile */
-             #container {
-                 display: block; /* Override flex */
-                 height: auto; /* Override 100vh */
-             }
-        }
-
-        /* --- Modal Styles --- */
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed;
-            z-index: 1050; /* Above everything */
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgba(0,0,0,0.5); /* Dim background */
-        }
-        .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto; /* Vertically centered */
-            padding: 25px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 600px; /* Max width */
-            border-radius: 8px;
-            position: relative;
-             max-height: 90vh; /* Limit height */
-             overflow-y: auto; /* Scroll inside modal if needed */
-        }
-        .modal-content h2 {
-            margin-top: 0;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
-        }
-        .modal-content label {
-            display: block;
-            margin-top: 10px;
-            font-weight: bold;
-            margin-bottom: 3px;
-        }
-        .modal-content input[type=text],
-        .modal-content input[type=number],
-        .modal-content textarea {
-            width: 100%;
-            padding: 8px;
             margin-bottom: 10px;
-            border: 1px solid #ccc;
+        }
+        .location-photo-popup {
+            width: 100%;
+            max-width: 300px;
+            height: 200px;
+            object-fit: cover;
             border-radius: 4px;
-            box-sizing: border-box;
+            margin-bottom: 10px;
         }
-         .modal-content fieldset {
-             border: 1px solid #ccc;
-             border-radius: 4px;
-             padding: 10px;
-             margin-bottom: 15px;
-         }
-        .modal-content fieldset legend {
-             font-weight: bold;
-             padding: 0 5px;
+        .photo-container {
+            position: relative;
+            margin-bottom: 10px;
         }
-        .modal-content fieldset label { /* Style checkbox labels */
-             display: inline-block;
-             margin-right: 15px;
-             font-weight: normal;
-         }
-         .modal-content fieldset input[type=checkbox] {
-             margin-right: 5px;
-         }
-
-        .modal-actions {
-            text-align: right;
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 1px solid #eee;
-        }
-        .modal-actions button {
-            padding: 10px 15px;
-            margin-left: 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .modal-actions button[type=submit] {
-            background-color: #28a745;
-            color: white;
-        }
-         .modal-actions button.cancel-btn {
-             background-color: #6c757d;
-             color: white;
-         }
-        .close-btn {
-            color: #aaa;
+        .photo-container::after {
+            content: '📸';
             position: absolute;
             top: 10px;
-            right: 20px;
-            font-size: 28px;
-            font-weight: bold;
+            right: 10px;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            padding: 5px;
+            border-radius: 50%;
+        }
+        .filter-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            margin: 5px;
+            border-radius: 4px;
             cursor: pointer;
         }
-        .close-btn:hover,
-        .close-btn:focus {
-            color: black;
-            text-decoration: none;
+        .filter-btn.active {
+            background: #45a049;
         }
-
-        /* --- Map Location Setter Styles --- */
-        #map-location-setter {
-            /* Existing inline styles (display, position, z-index, background) are fine */
-            pointer-events: none; /* Make the main overlay pass clicks through */
+        .filter-btn:hover {
+            background: #45a049;
         }
-
-        #map-location-actions {
-             /* Existing inline styles (position, transform, z-index) are fine */
-             pointer-events: auto; /* Make the button container clickable again */
-         }
-
-        /* No need for pointer-events: none on #map-crosshair anymore */
-
-        /* --- End Map Location Setter Styles --- */
+        #toggle-filters {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        @media (max-width: 768px) {
+            #container {
+                flex-direction: column;
+            }
+            #sidebar {
+                width: 100%;
+                max-height: 40vh;
+                position: fixed;
+                top: 0;
+                left: 0;
+                z-index: 900;
+                transform: translateY(-100%);
+                transition: transform 0.3s ease-in-out;
+            }
+            #sidebar.visible {
+                transform: translateY(0);
+            }
+            #map {
+                height: 100vh;
+            }
+            #toggle-filters {
+                display: block;
+            }
+        }
     </style>
 </head>
 <body>
     <div id="container">
         <div id="sidebar">
-            <h2>HK Photo Playbook Spots</h2>
-            <input type="text" id="search-box" placeholder="Search locations...">
-            
-             <div class="filter-section">
-                <h3>Filter by Day</h3>
-                <div class="filter-buttons">
-                    <button class="select-all" data-filter="day">Select All</button>
-                    <button class="deselect-all" data-filter="day">Deselect All</button>
-                </div>
-                <div class="day-filter">
-                    <label><input type="checkbox" value="1" checked> Day 1</label><br>
-                    <label><input type="checkbox" value="2" checked> Day 2</label><br>
-                    <label><input type="checkbox" value="3" checked> Day 3</label><br>
-                    <label><input type="checkbox" value="4" checked> Day 4</label><br>
-                    <label><input type="checkbox" value="5" checked> Day 5</label><br>
-                    <label><input type="checkbox" value="Extra" checked> Extra Credit</label>
-                </div>
+            <h2>Hong Kong Photography Guide</h2>
+            <div id="filters">
+                <!-- Filter buttons will be added here -->
             </div>
-
-            <div class="filter-section">
-                <h3>Filter by Time</h3>
-                <div class="filter-buttons">
-                    <button class="select-all" data-filter="time">Select All</button>
-                    <button class="deselect-all" data-filter="time">Deselect All</button>
-                </div>
-                <div class="time-filter">
-                    <label><input type="checkbox" value="Morning" checked> Morning</label><br> 
-                    <label><input type="checkbox" value="Afternoon" checked> Afternoon</label><br>
-                    <label><input type="checkbox" value="Dusk" checked> Dusk</label><br> 
-                    <label><input type="checkbox" value="Evening" checked> Evening</label><br>
-                    <label><input type="checkbox" value="Night" checked> Night</label>
-                </div>
+            <div id="locations-list">
+                <!-- Location cards will be added here -->
             </div>
-
-            <div class="filter-section">
-                <h3>Filter by Category</h3>
-                <div class="filter-buttons">
-                    <button class="select-all" data-filter="category">Select All</button>
-                    <button class="deselect-all" data-filter="category">Deselect All</button>
-                </div>
-                <div class="category-filter">
-                    <label><input type="checkbox" value="Architecture" checked> Architecture</label><br>
-                    <label><input type="checkbox" value="Street Life" checked> Street Life</label><br>
-                    <label><input type="checkbox" value="Markets" checked> Markets</label><br>
-                    <label><input type="checkbox" value="Urban Views" checked> Urban Views</label><br>
-                    <label><input type="checkbox" value="Transport" checked> Transport</label><br>
-                    <label><input type="checkbox" value="Culture" checked> Culture</label><br>
-                    <label><input type="checkbox" value="Coastal" checked> Coastal/Waterfront</label><br>
-                    <label><input type="checkbox" value="Industrial" checked> Industrial</label><br>
-                    <label><input type="checkbox" value="Night" checked> Night Photography</label><br>
-                </div>
-            </div>
-
-            <!-- Add Import/Export Section -->
-            <div class="io-section" style="margin-bottom: 20px; padding-top: 10px; border-top: 1px solid #eee;">
-                <h3>Import / Export / Clear</h3>
-                <button id="export-xml-btn" style="margin-right: 10px; padding: 5px 10px;">Export XML</button>
-                <button id="import-xml-btn" style="margin-right: 10px; padding: 5px 10px;">Import XML</button>
-                <button id="remove-all-btn" style="padding: 5px 10px; background-color: #dc3545; color: white; border: none;">Remove All</button>
-                <input type="file" id="import-xml-input" accept=".xml" style="display: none;">
-                <p style="font-size: 12px; color: #666; margin-top: 8px;">Imported locations will be added. 'Remove All' clears everything.</p>
-            </div>
-
-            <div id="locations-list"></div>
         </div>
         <div id="map"></div>
-
-        <!-- Map Location Setter Overlay -->
-        <div id="map-location-setter" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1040; background: rgba(0,0,0,0.1);">
-            <div id="map-crosshair" style="position: absolute; top: 50%; left: 50%; width: 30px; height: 30px; border: 2px solid red; transform: translate(-50%, -50%);">
-                <!-- Simple crosshair -->
-                 <div style="position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background: red; transform: translateY(-50%);"></div>
-                 <div style="position: absolute; left: 50%; top: 0; height: 100%; width: 2px; background: red; transform: translateX(-50%);"></div>
-            </div>
-             <div id="map-location-actions" style="position: absolute; bottom: 70px; left: 50%; transform: translateX(-50%); z-index: 1041;">
-                 <button id="update-map-location-btn" style="padding: 10px 15px; margin-right: 10px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">Update Location</button>
-                 <button id="cancel-map-location-btn" style="padding: 10px 15px; background-color: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer;">Cancel</button>
-             </div>
-        </div>
-        <!-- End Map Location Setter Overlay -->
-
-        <button id="toggle-filters-btn" class="mobile-only">Filters</button>
     </div>
+    <button id="toggle-filters">Show Filters</button>
 
-    <!-- Edit Location Modal -->
-    <div id="edit-modal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <h2>Edit Location</h2>
+    <div id="edit-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+        <div style="position: relative; background: white; width: 90%; max-width: 500px; margin: 50px auto; padding: 20px; border-radius: 8px;">
+            <h3>Edit Location</h3>
             <form id="edit-form">
-                 <input type="hidden" id="edit-location-index" value="">
-
-                <label for="edit-name">Name:</label>
-                <input type="text" id="edit-name" required>
-
-                 <label for="edit-lat">Latitude:</label>
-                 <input type="number" step="any" id="edit-lat" required>
-
-                 <label for="edit-lng">Longitude:</label>
-                 <input type="number" step="any" id="edit-lng" required>
-                 <button type="button" id="set-location-on-map-btn" style="margin-top: 5px; padding: 4px 8px; font-size: 12px;">Set Location on Map</button>
-
-                 <label for="edit-day">Day:</label>
-                 <input type="text" id="edit-day"> <!-- Keep as text for "Extra" etc. -->
-
-                 <label for="edit-desc">Description:</label>
-                 <textarea id="edit-desc" rows="3"></textarea>
-
-                 <label for="edit-transport">Transport:</label>
-                 <input type="text" id="edit-transport">
-
-                <fieldset>
-                    <legend>Time:</legend>
-                     <div id="edit-time-options">
-                         <!-- Checkboxes will be populated by JS -->
-                     </div>
-                </fieldset>
-
-                <fieldset>
-                    <legend>Categories:</legend>
-                    <div id="edit-category-options">
-                        <!-- Checkboxes will be populated by JS -->
-                    </div>
-                 </fieldset>
-
-                <label for="edit-photoTips">Photo Tips (one per line):</label>
-                <textarea id="edit-photoTips" rows="4"></textarea>
-
-                <div class="modal-actions">
-                    <button type="submit">Save Changes</button>
-                    <button type="button" class="cancel-btn">Cancel</button>
+                <input type="hidden" id="edit-index">
+                <div style="margin-bottom: 10px;">
+                    <label for="edit-name">Name:</label>
+                    <input type="text" id="edit-name" style="width: 100%; padding: 5px;">
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <label for="edit-desc">Description:</label>
+                    <textarea id="edit-desc" style="width: 100%; padding: 5px;"></textarea>
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <label for="edit-day">Day:</label>
+                    <input type="text" id="edit-day" style="width: 100%; padding: 5px;">
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <label for="edit-transport">Transport:</label>
+                    <input type="text" id="edit-transport" style="width: 100%; padding: 5px;">
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <label for="edit-time">Time (comma-separated):</label>
+                    <input type="text" id="edit-time" style="width: 100%; padding: 5px;">
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <label for="edit-categories">Categories (comma-separated):</label>
+                    <input type="text" id="edit-categories" style="width: 100%; padding: 5px;">
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <label for="edit-photo-tips">Photo Tips (one per line):</label>
+                    <textarea id="edit-photo-tips" style="width: 100%; padding: 5px;"></textarea>
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <button type="button" id="set-location-btn" style="padding: 5px 10px; margin-right: 10px;">Set Location on Map</button>
+                    <button type="submit" style="padding: 5px 10px; margin-right: 10px;">Save Changes</button>
+                    <button type="button" onclick="closeEditModal()" style="padding: 5px 10px;">Cancel</button>
                 </div>
             </form>
         </div>
     </div>
-    <!-- End Edit Location Modal -->
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-    crossorigin=""></script>
+    <div id="location-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: transparent; z-index: 1001; pointer-events: none;">
+        <div style="
+            position: fixed;
+            left: 50%;
+            bottom: 32px;
+            transform: translateX(-50%);
+            color: #fff;
+            text-align: center;
+            pointer-events: auto;
+            background: rgba(0,0,0,0.6);
+            border-radius: 16px;
+            padding: 18px 28px 14px 28px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+            ">
+            <div style="font-size: 1.3rem; margin-bottom: 10px; text-shadow: 0 2px 8px #000;">
+                Click on the map to set the location
+            </div>
+            <button onclick="cancelLocationSet()" style="padding: 7px 18px; font-size: 1rem; border-radius: 8px; border: none; background: #fff; color: #222; cursor: pointer;">Cancel</button>
+        </div>
+    </div>
 
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script>
-        const map = L.map('map').setView([22.3193, 114.1694], 12);
+        // Add these at the top of your script section, before any functions
+        let locations = []; // Global variable to store locations
+        let markers = []; // Global variable to store markers
 
-        // --- State for map location setting ---
-        let isSettingLocation = false;
-        let locationIndexBeingSet = -1;
-
-        // --- DOM References for Map Setter ---
-        const mapLocationSetter = document.getElementById('map-location-setter');
-        const updateMapLocationBtn = document.getElementById('update-map-location-btn');
-        const cancelMapLocationBtn = document.getElementById('cancel-map-location-btn');
-
-        // Add OpenStreetMap tiles
+        // Initialize the map
+        const map = L.map('map', {
+            center: [22.3193, 114.1694],
+            zoom: 13,
+            maxZoom: 22 // Allow zooming in much further
+        });
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '© OpenStreetMap contributors'
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 22, // Allow zooming in much further
+            minZoom: 1
         }).addTo(map);
 
-        // ---- Define available filter options ----
-        const allTimes = ["Morning", "Afternoon", "Dusk", "Evening", "Night"];
-        const allCategories = ["Architecture", "Street Life", "Markets", "Urban Views", "Transport", "Culture", "Coastal", "Industrial", "Night Photography"]; // Match filter checkboxes
-
-        // --- Photography locations data ---
-        let locations = [ // CHANGED TO LET for potential full replacement later if needed
-             // --- Day 1 ---
-             { 
-                name: "Central Elevated Walkway", 
-                day: "1", // Added Day Property
-                lat: 22.2830, 
-                lng: 114.1580, 
-                time: ["Morning"], 
-                categories: ["Architecture", "Urban Views", "Transport"],
-                desc: "Graphic diagonals, reflections off buildings, top-down shots of trams & pedestrians[cite: 18].",
-                transport: "MTR: Central",
-                photoTips: ["24 mm · f/8 · CPL filter [cite: 19]", "Look for architectural patterns[cite: 19]."]
-            },
-            { 
-                name: "Tram ride (Central to Wan Chai)", 
-                day: "1", 
-                lat: 22.2800, 
-                lng: 114.1650, 
-                time: ["Morning", "Afternoon", "Evening"], 
-                categories: ["Transport", "Street Life"],
-                desc: "Shooting through tram windows, capturing motion blur of street scenes passing by[cite: 20].",
-                transport: "Ding Ding Tram",
-                photoTips: ["~1/15 s · ISO-Auto (max 1600)[cite: 21]."]
-            },
-             { 
-                name: "Wan Chai wet-markets & tong lau", 
-                day: "1",
-                lat: 22.2770, 
-                lng: 114.1730, 
-                time: ["Afternoon"], 
-                categories: ["Markets", "Street Life", "Architecture"],
-                desc: "Neon signs on butcher scales, peeling paint textures, layers of balconies & hanging laundry[cite: 22].",
-                transport: "MTR: Wan Chai / Tram",
-                photoTips: ["35 mm · f/2.8 · zone-focus[cite: 23]."]
-            },
-            { 
-                name: "Blue House Cluster (Wan Chai)", 
-                day: "1",
-                lat: 22.2728, 
-                lng: 114.1718, 
-                time: ["Dusk", "Evening"], 
-                categories: ["Architecture", "Transport", "Night"],
-                desc: "Capturing bus light-trails curving around the historic coloured building block[cite: 24].",
-                transport: "MTR: Wan Chai",
-                photoTips: ["Tripod · f/11 · ~10 s[cite: 25]."]
-            },
-             { 
-                name: "Central Crossings (Light Trails)", 
-                day: "1",
-                lat: 22.2815, 
-                lng: 114.1575, 
-                time: ["Evening","Night"], 
-                categories: ["Transport", "Urban Views", "Night"],
-                desc: "Long exposures of taxi/bus/tram light trails near major intersections[cite: 26]. Building lights often off ~10 PM[cite: 28].",
-                transport: "MTR: Central",
-                photoTips: ["Tripod · f/11-f/16 · 5-20s · Low ISO [cite: 27]", "Burst mode for multiple trails[cite: 28]."]
-            },
-             // --- Day 2 ---
-            { 
-                name: "Sham Shui Po markets (Apliu St / Pei Ho St)", 
-                day: "2",
-                lat: 22.3299, 
-                lng: 114.1625, 
-                time: ["Morning", "Afternoon"], 
-                categories: ["Markets", "Street Life"],
-                desc: "Close-ups of coin/hand exchanges, leading lines created by bolts of fabric, dense displays[cite: 29].",
-                transport: "MTR: Sham Shui Po",
-                photoTips: ["35 mm · f/4 · ~1/250 s[cite: 30]."]
-            },
-             { 
-                name: "13 Streets, To Kwa Wan garages", 
-                day: "2",
-                lat: 22.3215, 
-                lng: 114.1905, 
-                time: ["Afternoon"], 
-                categories: ["Street Life", "Industrial"],
-                desc: "Mechanics working, colourful car parts, oily textures, industrial repetition[cite: 31].",
-                transport: "Bus / Taxi from Mong Kok",
-                photoTips: ["50 mm · f/5.6 [cite: 32]", "Ask permission first[cite: 32]."]
-            },
-             { 
-                name: "Mong Kok neon circuit (Tong Choi St area)", 
-                day: "2",
-                lat: 22.3185, 
-                lng: 114.1695, 
-                time: ["Evening", "Night"], 
-                categories: ["Street Life", "Urban Views", "Night"],
-                desc: "Neon reflections in puddles (esp. after rain), sneaker stalls, steam from food vendors[cite: 33].",
-                transport: "MTR: Mong Kok",
-                photoTips: ["24–35 mm · f/1.8 · ISO ~3200 [cite: 34]", "Look for reflections [cite: 34]", "Portrait orientation for compression[cite: 35]."]
-            },
-            // --- Day 3 ---
-             { 
-                name: "TST Promenade (Avenue of Stars area)", 
-                day: "3",
-                lat: 22.2933, 
-                lng: 114.1722, 
-                time: ["Morning", "Evening", "Night"], 
-                categories: ["Urban Views", "Coastal"],
-                desc: "Peach/golden light on the HK Island skyline (sunrise)[cite: 36], Symphony of Lights (night).",
-                transport: "MTR: East Tsim Sha Tsui",
-                photoTips: ["Consider ND filters for long exposure water/clouds[cite: 37]."]
-            },
-            { 
-                name: "Granville / Kimberley Streets (TST)", 
-                day: "3",
-                lat: 22.2995, 
-                lng: 114.1738, 
-                time: ["Morning", "Afternoon", "Evening"], 
-                categories: ["Street Life", "Architecture"],
-                desc: "Juxtapositions: reflections of luxury shops vs. street vendors, textures[cite: 38].",
-                transport: "MTR: Tsim Sha Tsui",
-                photoTips: ["50 mm · f/3.5 [cite: 39]", "Use telephoto for compression shots[cite: 39]."]
-            },
-            { 
-                name: "Star Ferry (Upper Deck)", 
-                day: "3",
-                lat: 22.2915, 
-                lng: 114.1650, 
-                time: ["Morning", "Afternoon", "Evening"], 
-                categories: ["Transport", "Urban Views", "Coastal"],
-                desc: "Freezing motion of gulls against the moving skyline backdrop (TST to Central)[cite: 40].",
-                transport: "Star Ferry (TST or Central Pier)",
-                photoTips: ["~1/500 s · 24 mm[cite: 41]."]
-            },
-             { 
-                name: "Sheung Wan (Dried Seafood St / Man Mo Temple)", 
-                day: "3",
-                lat: 22.2844, 
-                lng: 114.1504, 
-                time: ["Afternoon"], 
-                categories: ["Markets", "Culture", "Street Life", "Architecture"],
-                desc: "Back-lighting through dried seafood, incense smoke, antique shops, murals[cite: 42].",
-                transport: "MTR: Sheung Wan",
-                photoTips: ["35 mm · ISO ~3200 (inside temples)[cite: 43]."]
-            },
-             { 
-                name: "Lugard Road Lookout (The Peak)", 
-                day: "3",
-                lat: 22.2754, 
-                lng: 114.1446, 
-                time: ["Dusk", "Evening", "Night"], 
-                categories: ["Urban Views", "Night"],
-                desc: "Panoramic view of the city grid lighting up below[cite: 44].",
-                transport: "Peak Tram / Bus 15 + walk",
-                photoTips: ["Tripod · f/8 · ~15 s [cite: 45]", "Consider shooting a time-lapse[cite: 46]."]
-            },
-             // --- Day 4 ---
-            { 
-                name: "Chun Yeung St Market, North Point", 
-                day: "4",
-                lat: 22.2915, 
-                lng: 114.1936, 
-                time: ["Morning"], 
-                categories: ["Markets", "Street Life", "Transport"],
-                desc: "Unique shot of the tram slicing through the bustling market stalls (watch out!)[cite: 47].",
-                transport: "MTR: North Point / Tram",
-                photoTips: ["24–35 mm · f/4 · ~1/500 s[cite: 48]."]
-            },
-             { 
-                name: "Monster Building (Yick Cheong Bldg), Quarry Bay", 
-                day: "4",
-                lat: 22.2841, 
-                lng: 114.2118, 
-                time: ["Afternoon", "Morning"], 
-                categories: ["Architecture", "Urban Views"],
-                desc: "Dense, Blade Runner-esque architectural symmetry, pops of colour from laundry[cite: 49]. Look for blossom framing seasonally[cite: 50].",
-                transport: "MTR: Quarry Bay / Tai Koo",
-                photoTips: ["16–24 mm · f/8 [cite: 51]", "Telephoto from outside for compression[cite: 51].", "Be quick, respectful, no tripods[cite: 51]."]
-            },
-            { 
-                name: "Quarry Bay Typhoon Shelter area", 
-                day: "4",
-                lat: 22.2885, 
-                lng: 114.2155, 
-                time: ["Afternoon"], 
-                categories: ["Coastal", "Transport", "Urban Views"],
-                desc: "Working junk boats, reflections of modern towers in the water[cite: 52].",
-                transport: "MTR: Quarry Bay / Sai Wan Ho",
-                photoTips: ["35 mm · f/5.6 · CPL filter[cite: 53]."]
-            },
-             { 
-                name: "Sai Wan Ho Waterfront", 
-                day: "4",
-                lat: 22.2848, 
-                lng: 114.2225, 
-                time: ["Evening", "Night"], 
-                categories: ["Coastal", "Street Life", "Night"],
-                desc: "Silhouettes of joggers/walkers against the harbour, ferry light streaks[cite: 54].",
-                transport: "MTR: Sai Wan Ho",
-                photoTips: ["Tripod · ND 8 filter · ~10–20 s[cite: 55]."]
-            },
-             // --- Day 5 ---
-             { 
-                name: "West Kowloon Cultural District Art Park", 
-                day: "5",
-                lat: 22.3015, 
-                lng: 114.1595, 
-                time: ["Morning", "Afternoon", "Evening"], 
-                categories: ["Urban Views", "Architecture", "Street Life", "Coastal"],
-                desc: "Cyclists/joggers in golden morning mist (if lucky), giant M+ museum LED façade patterns[cite: 56].",
-                transport: "MTR: Kowloon / Austin",
-                photoTips: ["24–70 mm · f/8[cite: 57]."] // Citation adjusted to match text
-            },
-            { 
-                name: "Yau Ma Tei Fruit Market", 
-                day: "5",
-                lat: 22.3117, 
-                lng: 114.1698, 
-                time: ["Morning", "Afternoon"], 
-                categories: ["Markets", "Street Life"],
-                desc: "Fruit porters hauling crates, colourful shutters, textures of fruit piles[cite: 57].",
-                transport: "MTR: Yau Ma Tei",
-                photoTips: ["35 mm · f/2.8 · ISO ~800[cite: 58]."]
-            },
-             { 
-                name: "Reclamation St / Jordan back-lanes", 
-                day: "5",
-                lat: 22.3075, 
-                lng: 114.1690, 
-                time: ["Afternoon"], 
-                categories: ["Street Life", "Culture"],
-                desc: "Dim sum chefs prepping near windows, curbside tailors/barbers, hidden shrines[cite: 59].",
-                transport: "MTR: Jordan / Yau Ma Tei",
-                photoTips: ["50 mm · f/3.5[cite: 60]."] // Citation adjusted to match text
-            },
-             { 
-                name: "Temple St Night Market, Jordan", 
-                day: "5",
-                lat: 22.3084, 
-                lng: 114.1703, 
-                time: ["Evening", "Night"], 
-                categories: ["Markets", "Street Life", "Culture", "Night"],
-                desc: "Fortune tellers, steam rising from food stalls, overhead canopy of lanterns/lights[cite: 60].",
-                transport: "MTR: Jordan / Yau Ma Tei",
-                photoTips: ["24–35 mm · f/1.8 · ISO ~3200 [cite: 61]", "Look for puddle reflections[cite: 61]."]
-            },
-            { 
-                name: "Kai Tak Runway Park", 
-                day: "5",
-                lat: 22.3135, 
-                lng: 114.2110, 
-                time: ["Night"], 
-                categories: ["Transport", "Urban Views", "Coastal", "Night"],
-                desc: "Long exposures capturing plane light trails (landing path nearby) over the harbour[cite: 62].",
-                transport: "Bus / Taxi",
-                photoTips: ["Tripod · ~20 s · f/11[cite: 63]."]
-            },
-            // --- Extra Credit ---
-            { 
-                name: "Causeway Bay (Times Square area)", 
-                day: "Extra",
-                lat: 22.2783, 
-                lng: 114.1823, 
-                time: ["Evening", "Night"], 
-                categories: ["Urban Views", "Street Life", "Architecture", "Night"],
-                desc: "Consumerism on steroids, LED canyon effect[cite: 64].",
-                transport: "MTR: Causeway Bay",
-                photoTips: ["Shoot the Times Square façade from the streetcar island for scale[cite: 65]."]
-            },
-            { 
-                name: "Sai Kung Public Pier", 
-                day: "Extra",
-                lat: 22.3813, 
-                lng: 114.2733, 
-                time: ["Morning", "Afternoon"], 
-                categories: ["Coastal", "Markets", "Street Life", "Culture"],
-                desc: "Fishermen, seafood auction vibes, harbour town[cite: 66].",
-                transport: "Bus / Minibus from Hang Hau/Choi Hung",
-                photoTips: ["Visit Sunday ~07:00 AM for the live seafood catch frenzy[cite: 67]."]
-            },
-             { 
-                name: "Tai O Fishing Village, Lantau", 
-                day: "Extra",
-                lat: 22.2544, 
-                lng: 113.8624, 
-                time: ["Morning", "Afternoon", "Dusk"], 
-                categories: ["Coastal", "Culture", "Architecture", "Street Life"],
-                desc: "Stilt houses over water, salted fish racks[cite: 68].",
-                transport: "Bus from Tung Chung MTR",
-                photoTips: ["Blue hour smoke from shrimp paste burners adds atmosphere[cite: 69]."]
-            },
-            { 
-                name: "HKU Station Area Viewpoint (Approx.)", 
-                day: "Extra",
-                lat: 22.2839, 
-                lng: 114.1358, 
-                time: ["Any"], 
-                categories: ["Urban Views", "Transport"],
-                desc: "Potential S-curve road for leading lines[cite: 70]. Requires scouting[cite: 71].",
-                transport: "MTR: HKU",
-                photoTips: ["Viewpoint near station exit; requires scouting[cite: 71]."]
-            },
-             { 
-                name: "Harbour Grand Hong Kong Rooftop", 
-                day: "Extra",
-                lat: 22.2874, 
-                lng: 114.1895, 
-                time: ["Evening", "Night", "Dusk"], 
-                categories: ["Urban Views", "Night"],
-                desc: "Epic high-angle harbour views[cite: 72].",
-                transport: "MTR: Fortress Hill",
-                photoTips: ["Likely requires hotel access (guest or rooftop bar). Check accessibility[cite: 73]."]
+        // Function to get photo path based on location data
+        function getLocationPhotoPath(location) {
+            const dayNum = location.day === "Extra" ? "5" : location.day;
+            const dayLocations = locations.filter(loc => loc.day === location.day);
+            const placeIndex = dayLocations.findIndex(loc => loc === location) + 1;
+            
+            if (placeIndex > 0) {
+                return `photos/day${dayNum}_place${placeIndex}.png`;
             }
-        ];
-
-        // Define icons for different categories
-        const icons = {
-            'Architecture': L.icon({
-                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
-                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                iconSize: [25, 41],
-                iconAnchor: [12, 41],
-                popupAnchor: [1, -34],
-                shadowSize: [41, 41]
-            }),
-            'Street Life': L.icon({
-                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                iconSize: [25, 41],
-                iconAnchor: [12, 41],
-                popupAnchor: [1, -34],
-                shadowSize: [41, 41]
-            }),
-            'Markets': L.icon({
-                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                iconSize: [25, 41],
-                iconAnchor: [12, 41],
-                popupAnchor: [1, -34],
-                shadowSize: [41, 41]
-            }),
-            'Urban Views': L.icon({
-                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png',
-                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                iconSize: [25, 41],
-                iconAnchor: [12, 41],
-                popupAnchor: [1, -34],
-                shadowSize: [41, 41]
-            })
-        };
-
-        // Define a default icon for categories that don't have a specific icon
-        const defaultIcon = L.icon({
-            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png',
-            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-            iconSize: [25, 41],
-            iconAnchor: [12, 41],
-            popupAnchor: [1, -34],
-            shadowSize: [41, 41]
-        });
-
-        // --- Store markers globally for access ---
-        let markers = [];
-        const locationsList = document.getElementById('locations-list');
-
-        // --- Reusable Function to Add Location ---
-        function addLocationToMapAndSidebar(location, index) {
-            const categoryIcon = location.categories && location.categories.length > 0 && icons[location.categories[0]]
-                                ? icons[location.categories[0]]
-                                : defaultIcon;
-            const lat = parseFloat(location.lat);
-            const lng = parseFloat(location.lng);
-
-            if (!isNaN(lat) && !isNaN(lng)) {
-                const marker = L.marker([lat, lng], { icon: categoryIcon });
-                marker.bindPopup(() => createPopupContent(location, index));
-                markers.push({ marker: marker, data: location, originalIndex: index });
-                const card = createSidebarCard(location, marker, index);
-                locationsList.appendChild(card);
-             } else {
-                console.warn(`Invalid coordinates for location: ${location.name}`);
-                const card = createSidebarCard(location, null, index);
-                locationsList.appendChild(card);
-             }
+            return null;
         }
 
-        // --- Initial Population ---
-        locations.forEach((location, index) => {
-            addLocationToMapAndSidebar(location, index);
-        });
-
-        // --- Popup and Sidebar Card Functions (Updated) ---
-        function createPopupContent(location, index) {
-            // Add an Edit button with the location's index
-            const editButtonHtml = `<button class="edit-location-btn" data-index="${index}" style="margin-top: 10px; padding: 3px 8px; font-size: 12px; cursor: pointer;">Edit</button>`;
-
-            return `
-                <strong>${location.name}</strong><br>
-                 <em>${location.desc || 'No description available.'}</em><br>
-                Playbook Day: ${location.day || 'N/A'}<br> Best time: ${Array.isArray(location.time) ? location.time.join(', ') : location.time}<br>
-                 ${location.transport ? `<div class="transport-info">🚇 ${location.transport}</div>` : ''}
-                ${location.photoTips && location.photoTips.length > 0 ? `
-                    <div class="photo-tips">
-                        📷 Photography Tips:
-                        <ul>
-                            ${location.photoTips.map(tip => `<li>${escapeXml(tip)}</li>`).join('')}
-                        </ul>
-                    </div>` : ''}
-                <div>
-                    ${location.categories ? location.categories.map(cat => `<span class="tag">${escapeXml(cat)}</span>`).join('') : ''}
-                </div>
-                 <a href="https://maps.google.com/?q=${location.lat},${location.lng}" class="google-maps-link" target="_blank" title="Opens location in Google Maps">📍 Open in Google Maps</a>
-                 ${editButtonHtml}
-             `;
-         }
-        
-        // Helper to generate inner HTML for the card
-        function createSidebarCardInnerHtml(location, index) {
-             const dayDisplay = location.day ? `<span class="day-tag">Day ${location.day}</span>` : '';
-             const editButtonHtml = `<button class="edit-location-btn" data-index="${index}" style="float: right; padding: 2px 5px; font-size: 11px; cursor: pointer; margin-left: 5px;">Edit</button>`;
-
-             return `
-                <h4>${escapeXml(location.name)} ${dayDisplay} ${editButtonHtml}</h4>
-                ${location.categories ? `<div>${location.categories.map(cat => `<span class="tag">${escapeXml(cat)}</span>`).join('')}</div>` : ''}
-                ${location.photoTips && location.photoTips.length > 0 ? `
-                    <div class="photo-tips">
-                        📷 Quick Tips:
-                        <ul>
-                            ${location.photoTips.slice(0, 2).map(tip => `<li>${escapeXml(tip)}</li>`).join('')}
-                            ${location.photoTips.length > 2 ? '<li><i>(Click popup/edit for more)</i></li>' : ''}
-                        </ul>
-                    </div>` : '<div class="photo-tips">📷 <i>Click popup/edit for details</i></div>'}
-                ${location.transport ? `<div class="transport-info">🚇 ${escapeXml(location.transport)}</div>` : ''}
-                 <a href="https://maps.google.com/?q=${location.lat},${location.lng}" class="google-maps-link" target="_blank" title="Opens location in Google Maps">📍 Open in Google Maps</a>
-            `;
-         }
-
-        function createSidebarCard(location, marker, index) {
-            const card = document.createElement('div');
-            card.className = 'location-card';
-             card.dataset.index = index; // Store index on the card element itself
-            card.innerHTML = createSidebarCardInnerHtml(location, index); // Use helper
-
-            // Click listener to pan map and open popup (excluding clicks on edit button or link)
-            card.addEventListener('click', (event) => {
-                 if (event.target.classList.contains('edit-location-btn') || event.target.closest('a')) {
-                     return; // Don't pan/popup if edit button or link is clicked
-                 }
-                 if (marker) {
-                     map.setView([location.lat, location.lng], 16);
-                     marker.openPopup();
-                 }
-            });
-            return card;
-        }
-
-        // --- Filter Functionality (UPDATED) ---
-        function filterMarkers() {
-             // Read selected days
-             const dayChecked = Array.from(document.querySelectorAll('.day-filter input:checked'))
-                .map(input => input.value); // Values are "1", "2", ..., "Extra"
-             
-             const timeChecked = Array.from(document.querySelectorAll('.time-filter input:checked'))
-                .map(input => input.value);
-            const categoriesChecked = Array.from(document.querySelectorAll('.category-filter input:checked'))
-                .map(input => input.value);
-            const searchText = document.getElementById('search-box').value.toLowerCase();
-            const locationCards = document.querySelectorAll('.location-card'); 
-
-            markers.forEach((markerData, i) => {
-                const location = markerData.data; 
-
-                // Normalize location time
-                const locationTimes = Array.isArray(location.time) ? location.time : [location.time];
-
-                 // --- Filter Matching Logic ---
-                 // Day matching: Check if the location's day is among the selected days
-                 const dayMatch = dayChecked.length === 0 || dayChecked.includes(String(location.day)); // Ensure comparison is string vs string
-                
-                 // Time matching 
-                 const timeMatch = timeChecked.length === 0 || timeChecked.some(checkedTime => locationTimes.includes(checkedTime));
-                
-                 // Category matching
-                const categoryMatch = categoriesChecked.length === 0 || (location.categories && location.categories.some(c => categoriesChecked.includes(c)));
-                
-                 // Search matching
-                 const searchMatch = searchText === '' || 
-                                    location.name.toLowerCase().includes(searchText) ||
-                                     (location.desc && location.desc.toLowerCase().includes(searchText)) || // Check if desc exists
-                                    (location.categories && location.categories.some(c => c.toLowerCase().includes(searchText))) ||
-                                    (location.photoTips && location.photoTips.some(t => t.toLowerCase().includes(searchText)));
-
-                 // --- Apply Filters ---
-                 if (dayMatch && timeMatch && categoryMatch && searchMatch) { // Include dayMatch
-                     markerData.marker.addTo(map);
-                     if (locationCards[i]) locationCards[i].style.display = 'block'; 
-                 } else {
-                     markerData.marker.remove();
-                      if (locationCards[i]) locationCards[i].style.display = 'none'; 
-                 }
-             });
-         }
-
-
-        // --- Event Listeners (UPDATED) ---
-         // Add event listeners for ALL filters (Day, Time, Category)
-         document.querySelectorAll('.day-filter input, .time-filter input, .category-filter input')
-             .forEach(input => input.addEventListener('change', filterMarkers));
-         document.getElementById('search-box')
-             .addEventListener('input', filterMarkers);
-
-        // --- Select/Deselect All (UPDATED) ---
-         document.querySelectorAll('.select-all, .deselect-all').forEach(button => {
-             button.addEventListener('click', () => {
-                 const filterType = button.dataset.filter; // 'day', 'time', or 'category'
-                 const isSelect = button.classList.contains('select-all');
-                 // Determine selector based on filterType
-                 let selector;
-                 if (filterType === 'day') {
-                     selector = '.day-filter input';
-                 } else if (filterType === 'time') {
-                     selector = '.time-filter input';
-                 } else if (filterType === 'category') {
-                     selector = '.category-filter input';
-                 } else {
-                     return; // Should not happen
-                 }
-                 
-                 document.querySelectorAll(selector).forEach(checkbox => {
-                     checkbox.checked = isSelect;
-                 });
-                 
-                 filterMarkers(); // Update map after changing selections
-             });
-         });
-
-        // Initial filter application
-        filterMarkers();
-
-        // --- Edit Location Modal Logic ---
-        const editModal = document.getElementById('edit-modal');
-        const editForm = document.getElementById('edit-form');
-        const closeBtn = editModal.querySelector('.close-btn');
-        const cancelBtn = editModal.querySelector('.cancel-btn');
-        const editTimeOptionsDiv = document.getElementById('edit-time-options');
-        const editCategoryOptionsDiv = document.getElementById('edit-category-options');
-
-        // Function to populate and open the modal
-        function openEditModal(locationIndex) {
-             // Ensure map setter is hidden when modal opens
-             if (mapLocationSetter) mapLocationSetter.style.display = 'none';
-             isSettingLocation = false; // Reset state
-
-            const location = locations[locationIndex];
-            if (!location) {
-                console.error("Location not found for index:", locationIndex);
-                alert("Could not find the location to edit.");
-                return;
-            }
-
-            // Populate basic fields
-            editForm.elements['edit-location-index'].value = locationIndex;
-            editForm.elements['edit-name'].value = location.name || '';
-            editForm.elements['edit-lat'].value = location.lat || '';
-            editForm.elements['edit-lng'].value = location.lng || '';
-            editForm.elements['edit-day'].value = location.day || '';
-            editForm.elements['edit-desc'].value = location.desc || '';
-            editForm.elements['edit-transport'].value = location.transport || '';
-            editForm.elements['edit-photoTips'].value = (location.photoTips || []).join('\n');
-
-             // Populate Time Checkboxes
-             editTimeOptionsDiv.innerHTML = ''; // Clear previous
-             const locationTimes = Array.isArray(location.time) ? location.time : [location.time].filter(t => t);
-             allTimes.forEach(time => {
-                 const checked = locationTimes.includes(time) ? 'checked' : '';
-                 editTimeOptionsDiv.innerHTML += `
-                     <label>
-                         <input type="checkbox" name="edit-time" value="${time}" ${checked}> ${time}
-                     </label>`;
-             });
-
-            // Populate Category Checkboxes
-             editCategoryOptionsDiv.innerHTML = ''; // Clear previous
-             const locationCategories = location.categories || [];
-             allCategories.forEach(cat => {
-                const checked = locationCategories.includes(cat) ? 'checked' : '';
-                 editCategoryOptionsDiv.innerHTML += `
-                    <label>
-                        <input type="checkbox" name="edit-category" value="${cat}" ${checked}> ${cat}
-                     </label>`;
-             });
-
-
-            editModal.style.display = 'block';
-        }
-
-        // Function to close the modal
-        function closeEditModal() {
-             // Also ensure map setter is hidden if modal is closed directly
-             if (mapLocationSetter && !isSettingLocation) { // Only hide if not actively setting location
-                 mapLocationSetter.style.display = 'none';
-             }
-            editModal.style.display = 'none';
-            editForm.reset(); // Clear the form
-        }
-
-         // --- Add Listener for "Set Location on Map" Button ---
-         const setLocationBtn = document.getElementById('set-location-on-map-btn');
-         if (setLocationBtn) {
-             setLocationBtn.addEventListener('click', () => {
-                 const index = parseInt(editForm.elements['edit-location-index'].value, 10);
-                 if (isNaN(index) || !locations[index]) {
-                     alert("Cannot determine which location to set.");
-                     return;
-                 }
-
-                 // Get potentially edited coords from modal FIRST
-                 let currentLat = parseFloat(editForm.elements['edit-lat'].value);
-                 let currentLng = parseFloat(editForm.elements['edit-lng'].value);
-
-                 // Fallback to original location data if modal fields are invalid/empty
-                 if (isNaN(currentLat) || isNaN(currentLng)) {
-                    const originalLocation = locations[index];
-                    currentLat = originalLocation.lat;
-                    currentLng = originalLocation.lng;
-                 }
-
-                 if (isNaN(currentLat) || isNaN(currentLng)) {
-                    alert("Original location coordinates are invalid. Cannot center map.");
-                    return;
-                 }
-
-
-                 locationIndexBeingSet = index;
-                 isSettingLocation = true;
-
-                 closeEditModal(); // Hide the modal first
-
-                 map.setView([currentLat, currentLng], Math.max(map.getZoom(), 16)); // Center map, zoom in if needed
-                 mapLocationSetter.style.display = 'block'; // Show crosshair and buttons
-             });
-         }
-
-        // Event listener for opening the modal (using event delegation)
-        document.body.addEventListener('click', (event) => {
-            if (event.target.classList.contains('edit-location-btn')) {
-                const index = event.target.dataset.index;
-                openEditModal(parseInt(index, 10));
-            }
-        });
-
-        // Event listener for closing the modal
-        closeBtn.addEventListener('click', closeEditModal);
-        cancelBtn.addEventListener('click', closeEditModal);
-        editModal.addEventListener('click', (event) => { // Close if clicking outside content
-            if (event.target === editModal) {
-                closeEditModal();
-            }
-        });
-
-        // Event listener for saving changes
-        editForm.addEventListener('submit', (event) => {
-            event.preventDefault();
-
-            const index = parseInt(editForm.elements['edit-location-index'].value, 10);
-            const originalLocation = locations[index];
-             if (isNaN(index) || !originalLocation) {
-                alert("Error identifying the location to update.");
-                return;
-            }
-
-            // Collect updated data
-             const updatedLat = parseFloat(editForm.elements['edit-lat'].value);
-             const updatedLng = parseFloat(editForm.elements['edit-lng'].value);
-
-             if (isNaN(updatedLat) || isNaN(updatedLng)) {
-                 alert("Invalid Latitude or Longitude. Please enter valid numbers.");
-                 return;
-             }
-
-            const updatedLocation = {
-                name: editForm.elements['edit-name'].value.trim(),
-                lat: updatedLat,
-                lng: updatedLng,
-                day: editForm.elements['edit-day'].value.trim(),
-                desc: editForm.elements['edit-desc'].value.trim(),
-                transport: editForm.elements['edit-transport'].value.trim(),
-                time: Array.from(editForm.elements['edit-time'])
-                           .filter(cb => cb.checked)
-                           .map(cb => cb.value),
-                 categories: Array.from(editForm.elements['edit-category'])
-                               .filter(cb => cb.checked)
-                               .map(cb => cb.value),
-                 photoTips: editForm.elements['edit-photoTips'].value.split('\n').map(tip => tip.trim()).filter(tip => tip) // Split by newline, trim, remove empty lines
-            };
-
-            // --- Update Data and UI ---
-            try {
-                // 1. Update the main data array
-                locations[index] = updatedLocation;
-
-                 // 2. Find the corresponding marker data in the 'markers' array
-                 //    (Relies on initial index consistency - potential issue with add/remove later)
-                 const markerData = markers.find(m => m.originalIndex === index);
-
-                if (markerData && markerData.marker) {
-                     // 3. Update marker position if lat/lng changed
-                    const currentLatLng = markerData.marker.getLatLng();
-                    if (currentLatLng.lat !== updatedLocation.lat || currentLatLng.lng !== updatedLocation.lng) {
-                        markerData.marker.setLatLng([updatedLocation.lat, updatedLocation.lng]);
-                    }
-
-                     // 4. Update marker popup content (rebind to use updated data)
-                    markerData.marker.unbindPopup(); // Remove old popup binding
-                    markerData.marker.bindPopup(() => createPopupContent(updatedLocation, index)); // Rebind with new data/index
-
-                    // 5. Update the markerData.data reference (optional but good practice)
-                    markerData.data = updatedLocation;
-                 } else if (markerData && !markerData.marker && !isNaN(updatedLat) && !isNaN(updatedLng)) {
-                    // Handle case where location was initially invalid but now has coords
-                    // Recreate marker (this might get complex, consider just updating data first)
-                    console.warn("Editing coordinates for an initially invalid location. Marker might need manual recreation or page reload for now.");
-                 } else if (!markerData) {
-                    console.error("Could not find corresponding marker data for index:", index);
-                 }
-
-
-                 // 6. Update the sidebar card
-                const cardElement = locationsList.querySelector(`.location-card[data-index="${index}"]`);
-                if (cardElement) {
-                     cardElement.innerHTML = createSidebarCardInnerHtml(updatedLocation, index);
-                 } else {
-                    console.error("Could not find corresponding card element for index:", index);
-                 }
-
-                // 7. Close modal and notify
-                closeEditModal();
-                 filterMarkers(); // Re-apply filters in case day/time/category changed visibility
-                alert('Location updated successfully!');
-
-            } catch (error) {
-                 console.error("Error updating location:", error);
-                 alert("An error occurred while updating the location.");
-             }
-        });
-
-        // --- Import/Export Functionality ---
-        const exportBtn = document.getElementById('export-xml-btn');
-        const importBtn = document.getElementById('import-xml-btn');
-        const importInput = document.getElementById('import-xml-input');
-        const removeAllBtn = document.getElementById('remove-all-btn');
-
+        // Function to escape XML/HTML special characters
         function escapeXml(unsafe) {
-            return unsafe.replace(/[<>&'"]/g, function (c) {
-                switch (c) {
-                    case '<': return '&lt;';
-                    case '>': return '&gt;';
-                    case '&': return '&amp;';
-                    case '\'': return '&apos;';
-                    case '"': return '&quot;';
-                }
-            });
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
         }
 
-        function convertLocationsToXML(locationsArray) {
-            let xml = '<locations>\n';
-            locationsArray.forEach(loc => {
-                xml += '  <location>\n';
-                xml += `    <name>${escapeXml(loc.name || '')}</name>\n`;
-                xml += `    <lat>${loc.lat || ''}</lat>\n`;
-                xml += `    <lng>${loc.lng || ''}</lng>\n`;
-                xml += `    <day>${escapeXml(String(loc.day || ''))}</day>\n`; // Ensure day is string
-                if (loc.desc) xml += `    <desc>${escapeXml(loc.desc)}</desc>\n`;
-                if (loc.transport) xml += `    <transport>${escapeXml(loc.transport)}</transport>\n`;
+        // Create popup content
+        function createPopupContent(location, index) {
+            const photoPath = getLocationPhotoPath(location);
+            const photoHtml = photoPath ? 
+                '<div class="photo-container">' +
+                    '<img src="' + photoPath + '" alt="' + escapeXml(location.name) + '" class="location-photo-popup" onerror="this.style.display=\'none\'">' +
+                '</div>' : '';
 
-                (Array.isArray(loc.time) ? loc.time : [loc.time]).forEach(t => {
-                     if (t) xml += `    <time>${escapeXml(t)}</time>\n`;
-                });
-                (loc.categories || []).forEach(cat => {
-                    if (cat) xml += `    <category>${escapeXml(cat)}</category>\n`;
-                });
-                 (loc.photoTips || []).forEach(tip => {
-                     if (tip) xml += `    <photoTip>${escapeXml(tip)}</photoTip>\n`;
-                 });
+            // Google Maps URL
+            const googleMapsUrl = 'https://www.google.com/maps/search/?api=1&query=' + 
+                encodeURIComponent(location.name) + '@' + location.lat + ',' + location.lng;
 
-                xml += '  </location>\n';
-            });
-            xml += '</locations>';
-            return xml;
+            // Edit button, now styled for right alignment
+            const editButtonHtml = '<button class="edit-location-btn" data-index="' + index + '" style="padding:3px 10px; font-size:12px; cursor:pointer;">Edit</button>';
+
+            return photoHtml +
+                '<strong>' + escapeXml(location.name) + '</strong><br>' +
+                '<em>' + (location.desc || 'No description available.') + '</em><br>' +
+                'Playbook Day: ' + (location.day || 'N/A') + '<br> Best time: ' + (Array.isArray(location.time) ? location.time.join(', ') : location.time) + '<br>' +
+                (location.transport ? '<div class="transport-info">🚇 ' + escapeXml(location.transport) + '</div>' : '') +
+                (location.photoTips && location.photoTips.length > 0 ? 
+                    '<div class="photo-tips">' +
+                        '📷 Photography Tips:' +
+                        '<ul>' +
+                        location.photoTips.map(tip => '<li>' + escapeXml(tip) + '</li>').join('') +
+                        '</ul>' +
+                    '</div>' : '') +
+                '<div>' +
+                    (location.categories ? location.categories.map(cat => '<span class="tag">' + escapeXml(cat) + '</span>').join('') : '') +
+                '</div>' +
+                '<a href="' + googleMapsUrl + '" class="google-maps-link" target="_blank" title="Opens location in Google Maps">📍 Open in Google Maps</a>' +
+                // The edit button is now on a new line, right-aligned
+                '<div style="margin-top:8px; text-align:right;">' + editButtonHtml + '</div>';
         }
 
-        function parseXMLToLocations(xmlString) {
-            const parser = new DOMParser();
-            const xmlDoc = parser.parseFromString(xmlString, "application/xml");
+        // Create sidebar card content
+        function createSidebarCardInnerHtml(location, index) {
+            const dayDisplay = location.day ? '<span class="day-tag">Day ' + location.day + '</span>' : '';
+            const editButtonHtml = '<button class="edit-location-btn" data-index="' + index + '" style="float: right; padding: 2px 5px; font-size: 11px; cursor: pointer; margin-left: 5px;">Edit</button>';
+            const photoPath = getLocationPhotoPath(location);
+            const photoHtml = photoPath ? 
+                '<div class="photo-container">' +
+                    '<img src="' + photoPath + '" alt="' + escapeXml(location.name) + '" class="location-photo" onerror="this.style.display=\'none\'">' +
+                '</div>' : '';
 
-            // Basic error check
-            const parseError = xmlDoc.getElementsByTagName("parsererror");
-            if (parseError.length > 0) {
-                console.error("Error parsing XML:", parseError[0].innerText);
-                alert("Error parsing XML file. Check the console for details.");
-                return null; // Indicate error
-            }
+            // Update the Google Maps URL format
+            const googleMapsUrl = 'https://www.google.com/maps/search/?api=1&query=' + 
+                encodeURIComponent(location.name) + '@' + location.lat + ',' + location.lng;
 
-            const locationElements = xmlDoc.getElementsByTagName('location');
-            const newLocations = [];
-
-            for (let i = 0; i < locationElements.length; i++) {
-                const el = locationElements[i];
-                const location = {
-                    name: el.querySelector('name')?.textContent || 'Unnamed Location',
-                    lat: parseFloat(el.querySelector('lat')?.textContent || 0),
-                    lng: parseFloat(el.querySelector('lng')?.textContent || 0),
-                    day: el.querySelector('day')?.textContent || '', // Keep day as string
-                    desc: el.querySelector('desc')?.textContent || '',
-                    transport: el.querySelector('transport')?.textContent || '',
-                    time: Array.from(el.querySelectorAll('time')).map(node => node.textContent),
-                    categories: Array.from(el.querySelectorAll('category')).map(node => node.textContent),
-                    photoTips: Array.from(el.querySelectorAll('photoTip')).map(node => node.textContent)
-                };
-                 // Handle case where time might be single value in source data
-                 if (location.time.length === 0 && el.querySelector('time')) {
-                    location.time = [el.querySelector('time').textContent];
-                 }
-
-                newLocations.push(location);
-            }
-            return newLocations;
+            return '<h4>' + escapeXml(location.name) + ' ' + dayDisplay + ' ' + editButtonHtml + '</h4>' +
+                photoHtml +
+                (location.categories ? '<div>' + location.categories.map(cat => '<span class="tag">' + escapeXml(cat) + '</span>').join('') + '</div>' : '') +
+                (location.photoTips && location.photoTips.length > 0 ? 
+                    '<div class="photo-tips">' +
+                        '📷 Quick Tips:' +
+                        '<ul>' +
+                        location.photoTips.slice(0, 2).map(tip => '<li>' + escapeXml(tip) + '</li>').join('') +
+                        (location.photoTips.length > 2 ? '<li><i>(Click popup/edit for more)</i></li>' : '') +
+                        '</ul>' +
+                    '</div>' : '<div class="photo-tips">📷 <i>Click popup/edit for details</i></div>') +
+                (location.transport ? '<div class="transport-info">🚇 ' + escapeXml(location.transport) + '</div>' : '') +
+                '<a href="' + googleMapsUrl + '" class="google-maps-link" target="_blank" title="Opens location in Google Maps">📍 Open in Google Maps</a>';
         }
 
-        // Export Button Listener
-        exportBtn.addEventListener('click', () => {
+        // Modify the loadLocationsFromXML function
+        async function loadLocationsFromXML() {
             try {
-                const xmlData = convertLocationsToXML(locations); // Use the global 'locations' array
-                const blob = new Blob([xmlData], { type: 'application/xml' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'hk_photo_locations.xml';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-            } catch (error) {
-                console.error("Error generating XML:", error);
-                alert("Failed to generate XML file.");
-            }
-        });
-
-        // Import Button Listener (triggers hidden input)
-        importBtn.addEventListener('click', () => {
-            importInput.click();
-        });
-
-        // File Input Change Listener
-        importInput.addEventListener('change', (event) => {
-            const file = event.target.files[0];
-            if (!file) {
-                return; // No file selected
-            }
-
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                try {
-                    const xmlContent = e.target.result;
-                    const importedLocations = parseXMLToLocations(xmlContent);
-
-                    if (importedLocations) { // Check if parsing was successful
-                        // Add new locations to the global array
-                        locations.push(...importedLocations);
-
-                        // Add new locations to map and sidebar
-                        importedLocations.forEach((loc, index) => {
-                            addLocationToMapAndSidebar(loc, index);
-                        });
-
-                        // Re-apply filters to potentially show/hide new markers
-                        filterMarkers();
-
-                        alert(`Successfully imported ${importedLocations.length} location(s).`);
-                    }
-                } catch (error) {
-                    console.error("Error processing imported file:", error);
-                    alert("Failed to process imported file. See console for details.");
-                } finally {
-                     // Reset input value to allow importing the same file again
-                     importInput.value = null;
+                const response = await fetch('locations/hk_photo_locations.xml');
+                const xmlText = await response.text();
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(xmlText, "text/xml");
+                
+                // Clear the global locations array
+                locations = [];
+                
+                const locationElements = xmlDoc.getElementsByTagName("location");
+                
+                for (let location of locationElements) {
+                    const categories = Array.from(location.getElementsByTagName("category"))
+                        .map(cat => cat.textContent);
+                    
+                    const photoTips = Array.from(location.getElementsByTagName("photoTip"))
+                        .map(tip => tip.textContent);
+                    
+                    const time = Array.from(location.getElementsByTagName("time"))
+                        .map(t => t.textContent);
+                    
+                    locations.push({
+                        name: location.getElementsByTagName("name")[0].textContent,
+                        lat: parseFloat(location.getElementsByTagName("lat")[0].textContent),
+                        lng: parseFloat(location.getElementsByTagName("lng")[0].textContent),
+                        day: location.getElementsByTagName("day")[0].textContent,
+                        desc: location.getElementsByTagName("desc")[0].textContent,
+                        transport: location.getElementsByTagName("transport")[0].textContent,
+                        time: time,
+                        categories: categories,
+                        photoTips: photoTips
+                    });
                 }
-            };
-            reader.onerror = (e) => {
-                 console.error("Error reading file:", e);
-                 alert("Failed to read the selected file.");
-                 importInput.value = null; // Reset on error too
-            };
-            reader.readAsText(file);
-        });
-
-        // Remove All Button Listener
-        removeAllBtn.addEventListener('click', () => {
-            // Confirmation dialog
-            if (!confirm("Are you sure you want to remove ALL locations? This cannot be undone.")) {
-                return; // User cancelled
-            }
-
-            try {
-                // Remove markers from map
-                markers.forEach(markerData => {
-                    if (markerData.marker) {
-                        markerData.marker.remove();
-                    }
-                });
-
-                // Clear internal data structures
-                markers = []; // Reset the markers array (declared with let, so reassignment is OK)
-                locations.length = 0; // MODIFY THIS LINE - Clear the existing array contents
-
-                // Clear the sidebar list
-                locationsList.innerHTML = '';
-
-                alert("All locations have been removed.");
-
+                
+                return locations;
             } catch (error) {
-                console.error("Error removing locations:", error);
-                alert("An error occurred while trying to remove locations.");
+                console.error("Error loading locations:", error);
+                return [];
             }
-        });
+        }
 
-        // --- Sidebar Toggle Logic for Mobile ---
-        const toggleButton = document.getElementById('toggle-filters-btn');
-        const sidebar = document.getElementById('sidebar');
+        // Modify initializeMap to properly manage the markers array
+        async function initializeMap() {
+            // Load locations from XML
+            await loadLocationsFromXML();
+            
+            // Clear existing markers
+            markers.forEach(marker => marker.remove());
+            markers = [];
+            
+            const locationsList = document.getElementById('locations-list');
+            const filtersDiv = document.getElementById('filters');
+            
+            // Clear existing content
+            locationsList.innerHTML = '';
+            filtersDiv.innerHTML = '';
+            
+            // Get unique categories
+            const categories = [...new Set(locations.flatMap(loc => loc.categories || []))];
+            
+            // Create filter buttons
+            categories.forEach(category => {
+                const button = document.createElement('button');
+                button.className = 'filter-btn';
+                button.textContent = category;
+                button.onclick = () => toggleFilter(category);
+                filtersDiv.appendChild(button);
+            });
 
-        if (toggleButton && sidebar) {
+            // Create markers and cards
+            locations.forEach((location, index) => {
+                // Create marker
+                const marker = L.marker([location.lat, location.lng])
+                    .bindPopup(createPopupContent(location, index));
+                markers.push(marker);
+                marker.addTo(map);
+
+                // Create card
+                const card = document.createElement('div');
+                card.className = 'location-card';
+                card.innerHTML = createSidebarCardInnerHtml(location, index);
+                locationsList.appendChild(card);
+            });
+
+            // Mobile filters toggle
+            const toggleButton = document.getElementById('toggle-filters');
+            const sidebar = document.getElementById('sidebar');
+            
             toggleButton.addEventListener('click', () => {
                 sidebar.classList.toggle('visible');
-
-                // Optional: Change button text based on visibility
-                if (sidebar.classList.contains('visible')) {
-                    toggleButton.textContent = 'Hide Filters';
-                } else {
-                    toggleButton.textContent = 'Show Filters';
-                }
+                toggleButton.textContent = sidebar.classList.contains('visible') ? 'Hide Filters' : 'Show Filters';
             });
-
-            // Optional: Close sidebar if clicking on the map (or outside the sidebar)
-            const mapElement = document.getElementById('map');
-            if (mapElement) {
-                 mapElement.addEventListener('click', (event) => {
-                     // Check if the sidebar is visible and the click was not inside the sidebar
-                     if (sidebar.classList.contains('visible')) {
-                         sidebar.classList.remove('visible');
-                         toggleButton.textContent = 'Show Filters';
-                     }
-                 });
-            }
-
-            // Prevent clicks inside the sidebar from closing it
-             sidebar.addEventListener('click', (event) => {
-                 event.stopPropagation(); 
-             });
         }
 
-        // --- Listeners for Map Location Setter Buttons ---
-        updateMapLocationBtn.addEventListener('click', () => {
-            if (!isSettingLocation || locationIndexBeingSet < 0) return;
-
-            const center = map.getCenter();
-            const newLat = center.lat;
-            const newLng = center.lng;
-
-            mapLocationSetter.style.display = 'none'; // Hide overlay
-            isSettingLocation = false;
-
-            // Re-open the modal for the correct index
-            openEditModal(locationIndexBeingSet);
-
-            // Update the form fields AFTER modal is open and populated
-            // A small delay ensures the DOM is ready, though usually not strictly necessary
-            // setTimeout(() => {
-                if (editForm && editForm.elements['edit-lat'] && editForm.elements['edit-lng']) {
-                    editForm.elements['edit-lat'].value = newLat.toFixed(6); // Use toFixed for cleaner display
-                    editForm.elements['edit-lng'].value = newLng.toFixed(6);
+        // Modify toggleFilter to use the global markers array
+        function toggleFilter(category) {
+            const button = event.target;
+            button.classList.toggle('active');
+            
+            // Get all active filters
+            const activeFilters = Array.from(document.querySelectorAll('.filter-btn.active'))
+                .map(btn => btn.textContent);
+            
+            // Show/hide markers and cards based on filters
+            locations.forEach((location, index) => {
+                const marker = markers[index];
+                const card = document.querySelectorAll('.location-card')[index];
+                
+                if (!marker) {
+                    console.error(`Marker not found for index ${index}`);
+                    return;
                 }
-            // }, 0);
+                
+                const shouldShow = activeFilters.length === 0 || 
+                    location.categories.some(cat => activeFilters.includes(cat));
+                
+                if (shouldShow) {
+                    if (!map.hasLayer(marker)) {
+                        marker.addTo(map);
+                    }
+                    card.style.display = 'block';
+                } else {
+                    if (map.hasLayer(marker)) {
+                        marker.remove();
+                    }
+                    card.style.display = 'none';
+                }
+            });
+        }
 
-            locationIndexBeingSet = -1; // Reset index
+        // Call initialization
+        initializeMap();
+
+        function openEditModal(index) {
+            // Close any open Leaflet popup
+            map.closePopup();
+
+            const location = locations[index];
+            document.getElementById('edit-index').value = index;
+            document.getElementById('edit-name').value = location.name;
+            document.getElementById('edit-desc').value = location.desc;
+            document.getElementById('edit-day').value = location.day;
+            document.getElementById('edit-transport').value = location.transport;
+            document.getElementById('edit-time').value = Array.isArray(location.time) ? location.time.join(', ') : location.time;
+            document.getElementById('edit-categories').value = location.categories.join(', ');
+            document.getElementById('edit-photo-tips').value = location.photoTips.join('\n');
+            document.getElementById('edit-lat').value = location.lat;
+            document.getElementById('edit-lng').value = location.lng;
+            document.getElementById('edit-modal').style.display = 'block';
+        }
+
+        function closeEditModal() {
+            document.getElementById('edit-modal').style.display = 'none';
+        }
+
+        function setLocationOnMap() {
+            document.getElementById('edit-modal').style.display = 'none';
+            document.getElementById('location-overlay').style.display = 'block';
+            
+            // Center map on current location
+            const index = document.getElementById('edit-index').value;
+            const location = locations[index];
+            map.setView([location.lat, location.lng], 16);
+            
+            // Add click handler to map
+            map.once('click', function(e) {
+                const lat = e.latlng.lat;
+                const lng = e.latlng.lng;
+                
+                // Update the hidden inputs with the new coordinates
+                document.getElementById('edit-lat').value = lat;
+                document.getElementById('edit-lng').value = lng;
+                
+                // Update the marker position immediately for visual feedback
+                markers[index].setLatLng([lat, lng]);
+                
+                document.getElementById('location-overlay').style.display = 'none';
+                document.getElementById('edit-modal').style.display = 'block';
+            });
+        }
+
+        function cancelLocationSet() {
+            document.getElementById('location-overlay').style.display = 'none';
+            document.getElementById('edit-modal').style.display = 'block';
+        }
+
+        // Add event listeners for edit buttons
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('edit-location-btn')) {
+                const index = e.target.getAttribute('data-index');
+                openEditModal(index);
+            }
         });
 
-        cancelMapLocationBtn.addEventListener('click', () => {
-            if (!isSettingLocation || locationIndexBeingSet < 0) return;
-
-            mapLocationSetter.style.display = 'none'; // Hide overlay
-            isSettingLocation = false;
-
-            // Re-open the modal, fields will retain their previous values
-            openEditModal(locationIndexBeingSet);
-
-            locationIndexBeingSet = -1; // Reset index
+        // Update the form submit handler
+        document.getElementById('edit-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const index = document.getElementById('edit-index').value;
+            const location = locations[index];
+            
+            // Update location data
+            location.name = document.getElementById('edit-name').value;
+            location.desc = document.getElementById('edit-desc').value;
+            location.day = document.getElementById('edit-day').value;
+            location.transport = document.getElementById('edit-transport').value;
+            location.time = document.getElementById('edit-time').value.split(',').map(t => t.trim());
+            location.categories = document.getElementById('edit-categories').value.split(',').map(c => c.trim());
+            location.photoTips = document.getElementById('edit-photo-tips').value.split('\n').filter(t => t.trim());
+            
+            // Only update marker position if new coordinates are valid
+            const newLat = parseFloat(document.getElementById('edit-lat').value);
+            const newLng = parseFloat(document.getElementById('edit-lng').value);
+            
+            if (!isNaN(newLat) && !isNaN(newLng)) {
+                location.lat = newLat;
+                location.lng = newLng;
+                markers[index].setLatLng([newLat, newLng]);
+            }
+            
+            // Update popup and card content
+            markers[index].setPopupContent(createPopupContent(location, index));
+            document.querySelectorAll('.location-card')[index].innerHTML = createSidebarCardInnerHtml(location, index);
+            
+            closeEditModal();
         });
 
+        // Add hidden inputs for lat/lng to the edit form
+        const latLngInputs = document.createElement('div');
+        latLngInputs.innerHTML = `
+            <input type="hidden" id="edit-lat">
+            <input type="hidden" id="edit-lng">
+        `;
+        document.getElementById('edit-form').appendChild(latLngInputs);
+
+        // Make sure this is only added once, after your modal HTML is in the DOM
+        document.addEventListener('DOMContentLoaded', function() {
+            // Attach the click handler for the Set Location on Map button
+            const setLocBtn = document.getElementById('set-location-btn');
+            if (setLocBtn) setLocBtn.onclick = setLocationOnMap;
+        });
     </script>
 </body>
 </html>
